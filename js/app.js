@@ -74,8 +74,8 @@ function addNewMarker(title, coordinates) {
     // Create a marker per location
     var marker = new google.maps.Marker({
         map: map,
-        position: coordinates,
         title: title,
+        position: location,
         animation: google.maps.Animation.DROP,
     });
 
@@ -106,3 +106,42 @@ function addInfoWindow(marker, infowindow) {
         });
     }
 }
+
+
+var ViewModel = function() {
+    var self = this;
+    
+    // Create Marker Locations Array
+    self.locations = ko.observableArray([
+        new addNewMarker("Test 1", {lat: 37.739431 , lng: -25.663011})
+    ]);
+    
+    var viewModel = new ViewModel();
+    ko.applyBindings(viewModel);
+    
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

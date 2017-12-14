@@ -23,9 +23,9 @@
                 Locations
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item">Location 1</a>
-                    <a class="dropdown-item" href="#">Location 2</a>
-                    <a class="dropdown-item" href="#">Location 3</a>
+                    <ul data-bind="foreach: locations">
+                        <li data-bind="text: title"></li>
+                    </ul>
                 </div>
             </li>
         </ul>
