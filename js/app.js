@@ -66,14 +66,14 @@ function initMap() {
         var self = this;
         self.title = title;
         self.location = coordinates;
-        self.info = ko.observable("Place");
-        self.visible = ko.observable(true);
+        //self.info = ko.observable("Place");
+        //self.visible = ko.observable(true);
 
         // Create a marker per location
         var marker = new google.maps.Marker({
             map: map,
             title: title,
-            position: location,
+            position: coordinates,
             animation: google.maps.Animation.DROP
         });
 
@@ -82,9 +82,9 @@ function initMap() {
         // Add Other API = YELP INFO
 
         // Create an onclick event to open an infowindow at each marker.
-        marker.addListener('click', function () {
-            addInfoWindow(this, largeInfowindow);
-        });
+        //marker.addListener('click', function () {
+        //    addInfoWindow(this, largeInfowindow);
+        //});
 
         this.marker = marker;
     }
@@ -108,14 +108,14 @@ function initMap() {
 
     var ViewModel = function() {
         var self = this;
-
+        
         // Create Marker Locations Array
         self.locations = ko.observableArray([
             new addNewMarker("Test 1", {lat: 37.739431 , lng: -25.663011}),
             new addNewMarker("Test 2", {lat: 37.729431 , lng: -25.653011})
         ]);
 
-    }
+    };
     
     ko.applyBindings(new ViewModel());
 }
