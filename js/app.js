@@ -6,10 +6,10 @@ function initMap() {
     // Create new map
     map = new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 37.7449005,
-            lng: -25.6664418
+            lat: 38.4383491,
+            lng: -27.6328654
         },
-        zoom: 15,
+        zoom: 8,
     });
 
 
@@ -66,8 +66,7 @@ function initMap() {
         var self = this;
         self.title = title;
         self.location = coordinates;
-        //self.info = ko.observable("Place");
-        //self.visible = ko.observable(true);
+        self.description = ko.observable("Place");
 
         // Create a marker per location
         var marker = new google.maps.Marker({
@@ -79,16 +78,45 @@ function initMap() {
 
         var largeInfowindow = new google.maps.InfoWindow();
 
-        // Add Other API = YELP INFO
+        // Add Other API = WIKI
+        getAditionalInfo(self);
 
         // Create an onclick event to open an infowindow at each marker.
-        //marker.addListener('click', function () {
-        //    addInfoWindow(this, largeInfowindow);
-        //});
+        marker.addListener('click', function () {
+            addInfoWindow(this, largeInfowindow);
+        });
 
         this.marker = marker;
     }
 
+    
+    
+    function getAditionalInfo(markerObj) {
+        // load wikipedia data
+        var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + markerObj.title + '&limit=1&format=json&callback=wikiCallback';
+        
+        var wikiRequestTimeout = setTimeout(function(){
+            markerObj.description = "failed to get wikipedia resources";
+        }, 8000);
+
+        $.ajax({
+            url: wikiUrl,
+            dataType: "jsonp",
+            jsonp: "callback",
+            success: function( response ) {
+                
+                var articleList = response[1];
+
+                //for (var i = 0; i < articleList.length; i++) {
+                //    articleStr = articleList[i];
+                //    var url = 'http://en.wikipedia.org/wiki/' + articleStr;
+                //    $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
+                //};
+
+                clearTimeout(wikiRequestTimeout);
+            }
+        });        
+    }
 
 
     // This function populates the infowindow when the marker is clicked.
@@ -111,8 +139,15 @@ function initMap() {
         
         // Create Marker Locations Array
         self.locations = ko.observableArray([
-            new addNewMarker("Test 1", {lat: 37.739431 , lng: -25.663011}),
-            new addNewMarker("Test 2", {lat: 37.729431 , lng: -25.653011})
+            new addNewMarker("São Miguel Island", {lat: 37.754023 , lng: -25.463562}),
+            new addNewMarker("Santa Maria Island", {lat: 36.969987 , lng: -25.094147}),
+            new addNewMarker("Terceira Island", {lat: 38.711567 , lng: -27.211761}),
+            new addNewMarker("Pico Island", {lat: 38.458226 , lng: -28.357086}),
+            new addNewMarker("Faial Island", {lat: 38.580715 , lng: -28.692169}),
+            new addNewMarker("São Jorge Island", {lat: 38.630081 , lng: -28.024750}),
+            new addNewMarker("Graciosa", {lat: 39.049385 , lng: -28.011017}),
+            new addNewMarker("Flores Island", {lat: 39.428039 , lng: -31.210785}),
+            new addNewMarker("Corvo Island", {lat: 39.703291 , lng: -31.109161})
         ]);
 
     };
@@ -123,7 +158,13 @@ function initMap() {
 
 
 
-
+viewLocation = function() {
+    this.marker.setAnimation(google.maps.Animation.BOUNCE);
+    google.maps.event.trigger(this.marker, "click");
+    // Some Timeout
+    this.marker.setAnimation(null);
+    
+};
 
 
 
