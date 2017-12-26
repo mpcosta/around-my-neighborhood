@@ -66,7 +66,7 @@ function initMap() {
         var self = this;
         self.title = title;
         self.location = coordinates;
-        self.description = ko.observable("Place");
+        self.description = ko.observable("Marker Aditional Info");
 
         // Create a marker per location
         var marker = new google.maps.Marker({
@@ -76,27 +76,27 @@ function initMap() {
             animation: google.maps.Animation.DROP
         });
 
-        var largeInfowindow = new google.maps.InfoWindow();
+        var largeInfowindow = new google.maps.InfoWindow({maxWidth: 200});
 
-        // Add Other API = WIKI
+        // Get aditional info from wikipedia
         getAditionalInfo(self);
-
+        
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function () {
-            addInfoWindow(this, largeInfowindow);
+            addInfoWindow(this, largeInfowindow, self.description());
         });
 
         this.marker = marker;
     }
 
     
-    
+    // Function to populate description info with wikipedia information based on the name of the marker
     function getAditionalInfo(markerObj) {
         // load wikipedia data
         var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + markerObj.title + '&limit=1&format=json&callback=wikiCallback';
         
         var wikiRequestTimeout = setTimeout(function(){
-            markerObj.description = "failed to get wikipedia resources";
+            markerObj.description("failed to get wikipedia resources");
         }, 8000);
 
         $.ajax({
@@ -104,15 +104,11 @@ function initMap() {
             dataType: "jsonp",
             jsonp: "callback",
             success: function( response ) {
+                // On Success grab description
+                var description = response[2][0];
+                // Add description to obj
+                markerObj.description(description);
                 
-                var articleList = response[1];
-
-                //for (var i = 0; i < articleList.length; i++) {
-                //    articleStr = articleList[i];
-                //    var url = 'http://en.wikipedia.org/wiki/' + articleStr;
-                //    $wikiElem.append('<li><a href="' + url + '">' + articleStr + '</a></li>');
-                //};
-
                 clearTimeout(wikiRequestTimeout);
             }
         });        
@@ -120,11 +116,11 @@ function initMap() {
 
 
     // This function populates the infowindow when the marker is clicked.
-    function addInfoWindow(marker, infowindow) {
+    function addInfoWindow(marker, infowindow, markerInfo) {
         // Check to make sure the infowindow is not already opened on this marker.
         if (infowindow.marker != marker) {
             infowindow.marker = marker;
-            infowindow.setContent('<div>' + marker.title + '</div>');
+            infowindow.setContent('<div><strong><h3>' + marker.title + '</h3></strong></br><em>' + markerInfo + '</em></div>');
             infowindow.open(map, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
             infowindow.addListener('closeclick', function () {
