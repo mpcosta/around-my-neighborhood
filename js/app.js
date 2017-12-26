@@ -84,8 +84,10 @@ function initMap() {
         // Create an onclick event to open an infowindow at each marker.
         marker.addListener('click', function () {
             addInfoWindow(this, largeInfowindow, self.description());
+            marker.setAnimation(google.maps.Animation.BOUNCE);
         });
-
+        
+        
         this.marker = marker;
     }
 
@@ -125,6 +127,7 @@ function initMap() {
             // Make sure the marker property is cleared if the infowindow is closed.
             infowindow.addListener('closeclick', function () {
                 infowindow.marker = null;
+                marker.setAnimation(null);
             });
         }
     }
@@ -153,12 +156,12 @@ function initMap() {
 
 
 
-
+// Clear All markers and Add Animation only on the one we clicked opening it to view its info
 viewLocation = function() {
     this.marker.setAnimation(google.maps.Animation.BOUNCE);
     google.maps.event.trigger(this.marker, "click");
     // Some Timeout
-    this.marker.setAnimation(null);
+    //this.marker.setAnimation(null);
     
 };
 
