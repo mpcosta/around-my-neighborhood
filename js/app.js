@@ -126,6 +126,7 @@ function initMap() {
             infowindow.open(map, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
             infowindow.addListener('closeclick', function () {
+                // When closing info window stop animation as well
                 infowindow.marker = null;
                 marker.setAnimation(null);
             });
@@ -160,23 +161,7 @@ function initMap() {
 viewLocation = function() {
     this.marker.setAnimation(google.maps.Animation.BOUNCE);
     google.maps.event.trigger(this.marker, "click");
-    // Some Timeout
-    //this.marker.setAnimation(null);
-    
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
