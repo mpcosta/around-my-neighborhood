@@ -100,7 +100,7 @@ function initMap() {
         
         var wikiRequestTimeout = setTimeout(function(){
             markerObj.description("failed to get wikipedia resources");
-        }, 2000);
+        }, 5000);
 
         $.ajax({
             url: wikiUrl,
