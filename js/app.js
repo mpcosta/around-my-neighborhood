@@ -64,6 +64,7 @@ function initMap() {
     function addNewMarker(title, coordinates) {
 
         var self = this;
+        self.showLocation = ko.observable(true);
         self.title = title;
         self.location = coordinates;
         self.description = ko.observable("Marker Aditional Info");
@@ -99,7 +100,7 @@ function initMap() {
         
         var wikiRequestTimeout = setTimeout(function(){
             markerObj.description("failed to get wikipedia resources");
-        }, 8000);
+        }, 2000);
 
         $.ajax({
             url: wikiUrl,
@@ -109,7 +110,8 @@ function initMap() {
                 // On Success grab description
                 var description = response[2][0];
                 // Add description to obj
-                markerObj.description(description);
+                var infoAknow = "</br><strong>Information Provided by Wikipedia</strong>"
+                markerObj.description(description + infoAknow);
                 
                 clearTimeout(wikiRequestTimeout);
             }
@@ -136,7 +138,7 @@ function initMap() {
 
     var ViewModel = function() {
         var self = this;
-        
+        self.input = ko.observable();
         // Create Marker Locations Array
         self.locations = ko.observableArray([
             new addNewMarker("São Miguel Island", {lat: 37.754023 , lng: -25.463562}),
@@ -149,7 +151,19 @@ function initMap() {
             new addNewMarker("Flores Island", {lat: 39.428039 , lng: -31.210785}),
             new addNewMarker("Corvo Island", {lat: 39.703291 , lng: -31.109161})
         ]);
-
+        
+        // Filter Locations based on User Input
+        self.inputSearch = function() {
+           self.locations().forEach(function(location) {
+               if (location.title.toLocaleLowerCase().indexOf(self.input().toLocaleLowerCase()) === -1) {
+                    location.marker.setVisible(false);
+                    location.showLocation(false);
+               } else  {
+                    location.marker.setVisible(true);
+                    location.showLocation(true);
+               }
+           });
+        };
     };
     
     ko.applyBindings(new ViewModel());
@@ -162,8 +176,3 @@ viewLocation = function() {
     this.marker.setAnimation(google.maps.Animation.BOUNCE);
     google.maps.event.trigger(this.marker, "click");
 };
-
-
-
-
-
