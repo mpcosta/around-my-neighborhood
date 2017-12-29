@@ -61,7 +61,6 @@ function initMap() {
                 var infoAknow = "</br><strong>Information Provided by Wikipedia</strong>"
                 markerObj.description(description + infoAknow);
                 
-                clearTimeout(wikiRequestTimeout);
             },
             error: function(xhr, status, errorThrown) {
                 markerObj.description("failed to get wikipedia resources");
