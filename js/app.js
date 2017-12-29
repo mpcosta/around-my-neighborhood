@@ -50,10 +50,6 @@ function initMap() {
         // load wikipedia data
         var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + markerObj.title + '&limit=1&format=json&callback=wikiCallback';
         
-        var wikiRequestTimeout = setTimeout(function(){
-            markerObj.description("failed to get wikipedia resources");
-        }, 5000);
-
         $.ajax({
             url: wikiUrl,
             dataType: "jsonp",
@@ -66,6 +62,10 @@ function initMap() {
                 markerObj.description(description + infoAknow);
                 
                 clearTimeout(wikiRequestTimeout);
+            },
+            error: function(xhr, status, errorThrown) {
+                markerObj.description("failed to get wikipedia resources");
+                alert("An error has occurred while loading the Wikipedia API");
             }
         });        
     }
